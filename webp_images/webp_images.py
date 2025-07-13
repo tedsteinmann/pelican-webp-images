@@ -76,7 +76,7 @@ class WebPProcessor:
                 # Responsive size paths
                 responsive_paths = []
                 for width in self.responsive_sizes:
-                    if img.width > width:  # Don't upscale images
+                    if img.width >= width:  # Don't upscale images
                         resized_path = target_dir / f"{base_name}-{width}.webp"
                         output_paths.append(resized_path)
                         responsive_paths.append((width, resized_path))
