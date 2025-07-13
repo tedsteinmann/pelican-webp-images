@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pelican-webp-images"
+version = "0.1.0"
+description = "Pelican plugin to generate responsive WebP images from your static images"
+authors = [
+    { name = "Ted Steinmann", email = "ted@steinmann.me" }
+]
+readme = "README.md"
+license = { text = "MIT" }
+dependencies = [
+    "pelican>=4.0",
+    "Pillow>=8.0.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov"
+]
+
+[tool.setuptools]
+packages = ["webp_images"]
+
+[project.entry-points."pelican.plugins"]
+webp_images = "webp_images.webp_images"

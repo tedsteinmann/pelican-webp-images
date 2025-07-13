@@ -1,0 +1,4 @@
+pelican>=4.0
+Pillow>=8.0.0
+pytest
+pytest-cov
