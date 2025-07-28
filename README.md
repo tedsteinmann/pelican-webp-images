@@ -8,6 +8,7 @@
 - **Responsive Sizes**: Generates multiple image sizes (300px, 600px, 1200px by default)
 - **Smart Processing**: Only processes files when source is newer than output
 - **Configurable**: Flexible settings for quality, sizes, and directories
+- **Compression Control**: Tweak `WEBP_METHOD` and `WEBP_QUALITY` for smaller files
 - **Skip Logic**: Excludes thumbnail directories and prevents upscaling
 - **Performance**: Efficient processing with proper error handling
 
@@ -35,6 +36,7 @@ Add these optional settings to your `pelicanconf.py` to customize the plugin:
 WEBP_SOURCE_DIR = 'portfolio/static/images'        # Source directory for images
 WEBP_RESPONSIVE_SIZES = [300, 600, 1200]           # Responsive sizes to generate
 WEBP_QUALITY = 85                                  # WebP quality (0-100)
+WEBP_METHOD = 6                                    # libwebp compression effort (0-6)
 WEBP_SUPPORTED_FORMATS = ['.jpg', '.jpeg', '.png', '.webp']  # Supported formats
 WEBP_SKIP_DIRS = ['thumbnails']                    # Directories to skip
 WEBP_PROCESS_ORIGINAL = True                       # Generate original size WebP
@@ -74,7 +76,8 @@ You can use the generated responsive images in your templates:
   <source srcset="/static/images/photo-300.webp" media="(max-width: 400px)">
   <source srcset="/static/images/photo-600.webp" media="(max-width: 800px)">
   <source srcset="/static/images/photo-1200.webp" media="(max-width: 1400px)">
-  <img src="/static/images/photo.webp" alt="Description" loading="lazy">
+  <img src="/static/images/photo.webp" alt="Description" loading="lazy"
+       sizes="(max-width: 800px) 380px, 1200px">
 </picture>
 ```
 

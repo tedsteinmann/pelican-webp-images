@@ -26,11 +26,12 @@ class TestWebPProcessor:
         pelican_mock.settings = {}
         
         processor = WebPProcessor(pelican_mock)
-        
+
         assert processor.image_source_dir == Path('portfolio/static/images')
         assert processor.supported_exts == [".jpg", ".jpeg", ".png", ".webp"]
         assert processor.responsive_sizes == [300, 600, 1200]
         assert processor.quality == 85
+        assert processor.method == 6
         assert processor.skip_dirs == ['thumbnails']
         assert processor.process_original is True
     
@@ -42,6 +43,7 @@ class TestWebPProcessor:
             'OUTPUT_PATH': 'custom/output',
             'WEBP_RESPONSIVE_SIZES': [400, 800],
             'WEBP_QUALITY': 95,
+            'WEBP_METHOD': 5,
             'WEBP_SKIP_DIRS': ['thumbs', 'cache'],
             'WEBP_PROCESS_ORIGINAL': False
         }
@@ -51,6 +53,7 @@ class TestWebPProcessor:
         assert processor.image_source_dir == Path('custom/path')
         assert processor.responsive_sizes == [400, 800]
         assert processor.quality == 95
+        assert processor.method == 5
         assert processor.skip_dirs == ['thumbs', 'cache']
         assert processor.process_original is False
     

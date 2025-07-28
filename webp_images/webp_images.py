@@ -19,6 +19,7 @@ class WebPProcessor:
         self.supported_exts = self.settings.get('WEBP_SUPPORTED_FORMATS', [".jpg", ".jpeg", ".png", ".webp"])
         self.responsive_sizes = self.settings.get('WEBP_RESPONSIVE_SIZES', [300, 600, 1200])
         self.quality = self.settings.get('WEBP_QUALITY', 85)
+        self.method = self.settings.get('WEBP_METHOD', 6)
         self.skip_dirs = self.settings.get('WEBP_SKIP_DIRS', ['thumbnails'])
         self.process_original = self.settings.get('WEBP_PROCESS_ORIGINAL', True)
         
@@ -89,7 +90,7 @@ class WebPProcessor:
                 
                 # Save original WebP
                 if self.process_original:
-                    img.save(webp_path, "WEBP", quality=self.quality)
+                    img.save(webp_path, "WEBP", quality=self.quality, method=self.method)
                     logger.info(f"[WebP Plugin] Original: {img_path.name} → {webp_path.relative_to(self.image_output_dir)}")
                     processed_count += 1
                 
@@ -97,7 +98,7 @@ class WebPProcessor:
                 for width, resized_path in responsive_paths:
                     ratio = width / img.width
                     resized = img.resize((width, int(img.height * ratio)), Image.Resampling.LANCZOS)
-                    resized.save(resized_path, "WEBP", quality=self.quality)
+                    resized.save(resized_path, "WEBP", quality=self.quality, method=self.method)
                     logger.info(f"[WebP Plugin] Resized: {base_name} → {resized_path.relative_to(self.image_output_dir)} ({width}px)")
                     processed_count += 1
                 
