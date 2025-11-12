@@ -17,8 +17,8 @@ class WebPProcessor:
         self.image_source_dir = Path(self.settings.get('WEBP_SOURCE_DIR', 'portfolio/static/images'))
         self.image_output_dir = Path(self.settings.get('OUTPUT_PATH', 'output')) / 'static' / 'images'
         self.supported_exts = self.settings.get('WEBP_SUPPORTED_FORMATS', [".jpg", ".jpeg", ".png", ".webp"])
-        self.responsive_sizes = self.settings.get('WEBP_RESPONSIVE_SIZES', [300, 600, 1200])
-        self.quality = self.settings.get('WEBP_QUALITY', 85)
+        self.responsive_sizes = self.settings.get('WEBP_RESPONSIVE_SIZES', [300, 400, 600, 800, 1200])
+        self.quality = self.settings.get('WEBP_QUALITY', 80)
         self.method = self.settings.get('WEBP_METHOD', 6)
         self.skip_dirs = self.settings.get('WEBP_SKIP_DIRS', ['thumbnails'])
         self.process_original = self.settings.get('WEBP_PROCESS_ORIGINAL', True)

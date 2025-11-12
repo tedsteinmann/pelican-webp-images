@@ -29,8 +29,8 @@ class TestWebPProcessor:
 
         assert processor.image_source_dir == Path('portfolio/static/images')
         assert processor.supported_exts == [".jpg", ".jpeg", ".png", ".webp"]
-        assert processor.responsive_sizes == [300, 600, 1200]
-        assert processor.quality == 85
+        assert processor.responsive_sizes == [300, 400, 600, 800, 1200]
+        assert processor.quality == 80
         assert processor.method == 6
         assert processor.skip_dirs == ['thumbnails']
         assert processor.process_original is True
@@ -143,6 +143,38 @@ class TestWebPProcessor:
             assert (output_dir / "test-300.webp").exists()
             assert (output_dir / "test-600.webp").exists()
     
+    def test_process_image_with_default_sizes(self):
+        """Test image processing with default responsive sizes"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            pelican_mock = Mock()
+            pelican_mock.settings = {
+                'OUTPUT_PATH': tmpdir
+            }
+            
+            processor = WebPProcessor(pelican_mock)
+            processor.image_source_dir = Path(tmpdir) / "source"
+            processor.image_output_dir = Path(tmpdir) / "output"
+            
+            # Create source directory and large image
+            processor.image_source_dir.mkdir()
+            source_image = processor.image_source_dir / "large.jpg"
+            create_test_image(source_image, size=(1800, 1200))
+            
+            # Process the image
+            processed_count = processor.process_image(source_image)
+            
+            # Should process original + 5 default responsive sizes (300, 400, 600, 800, 1200)
+            assert processed_count == 6
+            
+            # Check output files exist
+            output_dir = processor.image_output_dir
+            assert (output_dir / "large.webp").exists()
+            assert (output_dir / "large-300.webp").exists()
+            assert (output_dir / "large-400.webp").exists()
+            assert (output_dir / "large-600.webp").exists()
+            assert (output_dir / "large-800.webp").exists()
+            assert (output_dir / "large-1200.webp").exists()
+    
     def test_process_image_no_upscaling(self):
         """Test that images are not upscaled"""
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -221,6 +253,31 @@ class TestWebPProcessor:
         
         # Should not raise exception
         processor.process_images()
+    
+    def test_compression_quality_default(self):
+        """Test that default compression quality is optimized for web performance"""
+        pelican_mock = Mock()
+        pelican_mock.settings = {}
+        
+        processor = WebPProcessor(pelican_mock)
+        
+        # Default quality should be 80 for better compression
+        assert processor.quality == 80
+        assert processor.method == 6  # Maximum compression effort
+    
+    def test_responsive_sizes_cover_common_displays(self):
+        """Test that default responsive sizes cover common display widths"""
+        pelican_mock = Mock()
+        pelican_mock.settings = {}
+        
+        processor = WebPProcessor(pelican_mock)
+        
+        # Default sizes should include granular options for better PageSpeed scores
+        assert 300 in processor.responsive_sizes  # Small mobile
+        assert 400 in processor.responsive_sizes  # Large mobile
+        assert 600 in processor.responsive_sizes  # Small tablet
+        assert 800 in processor.responsive_sizes  # Large tablet
+        assert 1200 in processor.responsive_sizes  # Desktop
 
 def test_process_webp_images_signal_handler():
     """Test the signal handler function"""
